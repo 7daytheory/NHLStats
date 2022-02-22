@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8" />
+    <title>NHL Stats</title>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles/styles.css" type="text/css" media="screen" />
+
+    <meta name="description"
+        content="Matthew Lowe - NHL Stats">
+    <meta property="og:description"
+        content="Matthew Lowe - NHL Stats">
+    <meta property="image" content="../images/logo.png">
+    <meta property="og:image" content="../images/logo.png">
+    <meta property="url" content="http://www.mattjlowe.com/">
+    <meta property="og:url" content="http://www.mattjlowe.com">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+
+</head>
+
+
+<body>
+
+    <div class="loader"></div>
+    
+    <h1>NHL Stats</h1>
+    <p class="notice">*This was a custom fantasy league - in process of reworking it into league stats<br>All data is retrieved through statsapi</p>
+    <div class="pageWrap">
+      <div class="teamList">
+        <!-- Populate with Team Names -->
+      </div>
+
+      <table id="team_table" class="teams_table">
+        
+      </table>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="scripts/scripts.js"></script>
+    <script src="scripts/logicController.js"></script>
+</body>
+
+</html>
