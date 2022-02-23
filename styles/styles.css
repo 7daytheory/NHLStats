@@ -51,6 +51,12 @@ h2 {
   height: auto;
 }
 
+#TBL_img, #TOR_img, #CGY_img {
+  background: #333;
+  padding: 5px;
+  border-radius: 15px;
+}
+
 .teamList div {
   position: relative;
   width: 80%;
