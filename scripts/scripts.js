@@ -1,7 +1,7 @@
 const yourContainer = document.getElementById("leaderboard");
 const teamWrap = document.querySelector('.teamList');
 let teams;
-
+teamlist = [];
 start();
 function start() {
 
@@ -11,14 +11,16 @@ fetch('https://statsapi.web.nhl.com/api/v1/teams')
       let team = data.teams;
       
       team.map((i) => {
-        createTeamArray(i.abbreviation, i.id);
+        createTeamArray(i.abbreviation, i.id, i.division.nameShort, i.conference.name);
         let div = i.abbreviation;
         createDivElement(div, i.name);
         let h2tag = 'h2' + i.abbreviation;
         createH2Element(h2tag, i.name, i.abbreviation);
       })
   }).then(() => {
-    console.log("Do some stuff...")
+      //
+  }).catch(() => {
+    alert("There has been an error, please try again.");
   })
 }
 
@@ -57,29 +59,38 @@ function createPElement(title,id, value, div) {
   divWrap.append(p);
 }
 
-function createTeamArray(team, id) {
-  console.log(team, id);
-  
-  let teamArray = [team];
-  
-  fetch('https://statsapi.web.nhl.com/api/v1/teams/' + id)
+teamArray = [];
+function createTeamArray(team, id, division, conference) {
+  fetch('https://statsapi.web.nhl.com/api/v1/teams/'+ id +'/stats/')
     .then(response => response.json())
     .then((data) => {
-      let teamData = data.teams;
-      let teamDiv = document.getElementById(team);
-      
-      teamData.map((i) => {
-        teamArray.push(i);
-        console.log(i);
-        
-        createPElement("Venue", id, i.venue.name, team);
-        createPElement("Conference", id, i.conference.name, team);
-        createPElement("Division", id, i.division.name, team);
-        createPElement("Website", id, i.officialSiteUrl, team);
+      teamArray.push({'team': team,
+      'teamID': id,
+      'division': division,
+      'conference': conference,
+      'points': data.stats[0].splits[0].stat.pts, 
+      'wins': data.stats[0].splits[0].stat.wins,
+      'losses': data.stats[0].splits[0].stat.losses,
+      'ot': data.stats[0].splits[0].stat.ot,
+      'games': data.stats[0].splits[0].stat.gamesPlayed,
+      'percentage': data.stats[0].splits[0].stat.ptPctg}
+    );
+    
+        createPElement("Points", id, data.stats[0].splits[0].stat.pts, team);
+        createPElement("Wins", id, data.stats[0].splits[0].stat.wins, team);
+        createPElement("Losses", id, data.stats[0].splits[0].stat.losses, team);
+        createPElement("OT Losses", id, data.stats[0].splits[0].stat.ot, team);
+        createPElement("Games Played", id, data.stats[0].splits[0].stat.gamesPlayed, team);
+        createPElement("Point Percentage", id, data.stats[0].splits[0].stat.ptPctg, team);
       })
-    })
 }
 
+window.addEventListener('load', getStandingsArray);
+
 function getStandingsArray(){
+  console.log("Testing!");
 	//Create standings for each division, conference and overall
+  teamArray.sort((a,b) => {
+    console.log(a);
+  });
 }
