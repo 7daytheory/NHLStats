@@ -57,6 +57,18 @@ function createPElement(title,id, value, div) {
   divWrap.append(p);
 }
 
+// value is value of h2
+function createImgElement(team) {
+  let img = document.createElement("IMG");
+  img.src = "images/" + team + "-logo.svg";
+  img.classList.add("team_logo");
+  img.id = team + "_img";
+  
+  //Append to DOM
+  let divWrap = document.getElementById(team);
+  divWrap.append(img);
+}
+
 teamArray = [];
 function createTeamArray(team, id, division, conference) {
   fetch('https://statsapi.web.nhl.com/api/v1/teams/'+ id +'/stats/')
@@ -73,13 +85,14 @@ function createTeamArray(team, id, division, conference) {
       'games': data.stats[0].splits[0].stat.gamesPlayed,
       'percentage': parseInt(data.stats[0].splits[0].stat.ptPctg)
     });
-    
-        createPElement("Points", id, data.stats[0].splits[0].stat.pts, team);
-        createPElement("Wins", id, data.stats[0].splits[0].stat.wins, team);
-        createPElement("Losses", id, data.stats[0].splits[0].stat.losses, team);
-        createPElement("OT Losses", id, data.stats[0].splits[0].stat.ot, team);
-        createPElement("Games Played", id, data.stats[0].splits[0].stat.gamesPlayed, team);
-        createPElement("Point Percentage", id, data.stats[0].splits[0].stat.ptPctg, team);
+        
+        createImgElement(team);
+        createPElement("Points", "points_" + id, data.stats[0].splits[0].stat.pts, team);
+        createPElement("Wins", "wins_" + id, data.stats[0].splits[0].stat.wins, team);
+        createPElement("Losses", "loss_" + id, data.stats[0].splits[0].stat.losses, team);
+        createPElement("OT Losses", "ot_" + id, data.stats[0].splits[0].stat.ot, team);
+        createPElement("Games Played", "gp_" + id, data.stats[0].splits[0].stat.gamesPlayed, team);
+        createPElement("Point Percentage", "pct_" + id, data.stats[0].splits[0].stat.ptPctg, team);
       })
 }
 

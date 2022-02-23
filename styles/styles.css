@@ -43,7 +43,16 @@ h2 {
     height: auto;
 }
 
+.team_logo {
+  position: absolute;
+  right: 25px;
+  top: 50px;
+  width: 100px;
+  height: auto;
+}
+
 .teamList div {
+  position: relative;
   width: 80%;
   margin-left: 10%;
   margin-top: 15px;
