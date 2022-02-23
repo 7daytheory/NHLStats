@@ -1,7 +1,5 @@
-const yourContainer = document.getElementById("leaderboard");
 const teamWrap = document.querySelector('.teamList');
-let teams;
-teamlist = [];
+
 start();
 function start() {
 
@@ -18,7 +16,7 @@ fetch('https://statsapi.web.nhl.com/api/v1/teams')
         createH2Element(h2tag, i.name, i.abbreviation);
       })
   }).then(() => {
-      //
+      //Do something 
   }).catch(() => {
     alert("There has been an error, please try again.");
   })
@@ -73,8 +71,8 @@ function createTeamArray(team, id, division, conference) {
       'losses': data.stats[0].splits[0].stat.losses,
       'ot': data.stats[0].splits[0].stat.ot,
       'games': data.stats[0].splits[0].stat.gamesPlayed,
-      'percentage': data.stats[0].splits[0].stat.ptPctg}
-    );
+      'percentage': parseInt(data.stats[0].splits[0].stat.ptPctg)
+    });
     
         createPElement("Points", id, data.stats[0].splits[0].stat.pts, team);
         createPElement("Wins", id, data.stats[0].splits[0].stat.wins, team);
@@ -90,7 +88,19 @@ window.addEventListener('load', getStandingsArray);
 function getStandingsArray(){
   console.log("Testing!");
 	//Create standings for each division, conference and overall
-  teamArray.sort((a,b) => {
-    console.log(a);
-  });
+  var newArray = teamArray.sort((a, b) => a.percentage - b.percentage);
+  
+  function compare( a, b ) {
+  if ( a.points < b.points ){
+    return -1;
+  }
+  if ( a.points > b.points ){
+    return 1;
+  }
+  return 0;
+}
+
+console.log(newArray);
+
+console.log(teamArray.sort(compare));
 }
