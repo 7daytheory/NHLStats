@@ -1,19 +1,25 @@
 const teamWrap = document.querySelector('.teamList');
 
-start();
-function start() {
+let newArray = [];
+let teamArray = [];
 
+class Start {
+	constructor() {
+		this.start();
+	}
+
+start (){
 fetch('https://statsapi.web.nhl.com/api/v1/teams')
   .then(response => response.json())
   .then((data) => {
       let team = data.teams;
       
       team.map((i) => {
-        createTeamArray(i.abbreviation, i.id, i.division.nameShort, i.conference.name);
+        this.createTeamArray(i.abbreviation, i.id, i.division.nameShort, i.conference.name);
         let div = i.abbreviation;
-        createDivElement(div, i.name);
+        this.createDivElement(div, i.name);
         let h2tag = 'h2' + i.abbreviation;
-        createH2Element(h2tag, i.name, i.abbreviation);
+       	this.createH2Element(h2tag, i.name, i.abbreviation);
       })
   }).then(() => {
       //Do something 
@@ -24,7 +30,7 @@ fetch('https://statsapi.web.nhl.com/api/v1/teams')
 
 // id is id value assigned to h2
 // value is value of h2
-function createDivElement(id, value) {
+createDivElement(id, value) {
   let div = document.createElement('div');
   div.id = id;
   div.classList.add = "teamWrapper";
@@ -35,7 +41,7 @@ function createDivElement(id, value) {
 
 // id is id value assigned to h2
 // value is value of h2
-function createH2Element(id, value, div) {
+createH2Element(id, value, div) {
   let h2 = document.createElement('h2');
   h2.id = id;
   h2.append(value);
@@ -47,7 +53,7 @@ function createH2Element(id, value, div) {
 
 // id is id value assigned to h2
 // value is value of h2
-function createPElement(title,id, value, div) {
+createPElement(title,id, value, div) {
   let p = document.createElement('p');
   p.id = id;
   p.append(`${title} : ${value}`);
@@ -57,8 +63,8 @@ function createPElement(title,id, value, div) {
   divWrap.append(p);
 }
 
-// value is value of h2
-function createImgElement(team) {
+// Create image element for team logo
+createImgElement(team) {
   let img = document.createElement("IMG");
   img.src = "images/" + team + "-logo.svg";
   img.classList.add("team_logo");
@@ -68,9 +74,9 @@ function createImgElement(team) {
   let divWrap = document.getElementById(team);
   divWrap.append(img);
 }
-
-teamArray = [];
-function createTeamArray(team, id, division, conference) {
+	
+async createTeamArray(team, id, division, conference) {
+	let teamArray = [];
   fetch('https://statsapi.web.nhl.com/api/v1/teams/'+ id +'/stats/')
     .then(response => response.json())
     .then((data) => {
@@ -84,36 +90,29 @@ function createTeamArray(team, id, division, conference) {
       'ot': data.stats[0].splits[0].stat.ot,
       'games': data.stats[0].splits[0].stat.gamesPlayed,
       'percentage': parseInt(data.stats[0].splits[0].stat.ptPctg)
-    });
-        
-        createImgElement(team);
-        createPElement("Points", "points_" + id, data.stats[0].splits[0].stat.pts, team);
-        createPElement("Wins", "wins_" + id, data.stats[0].splits[0].stat.wins, team);
-        createPElement("Losses", "loss_" + id, data.stats[0].splits[0].stat.losses, team);
-        createPElement("OT Losses", "ot_" + id, data.stats[0].splits[0].stat.ot, team);
-        createPElement("Games Played", "gp_" + id, data.stats[0].splits[0].stat.gamesPlayed, team);
-        createPElement("Point Percentage", "pct_" + id, data.stats[0].splits[0].stat.ptPctg, team);
-      })
+	})
+  })
+.then((e) => {
+this.getStandingsArray(teamArray);
+})     
 }
 
-window.addEventListener('load', getStandingsArray);
-
-function getStandingsArray(){
-  console.log("Testing!");
+getStandingsArray(teamArray){
 	//Create standings for each division, conference and overall
-  var newArray = teamArray.sort((a, b) => a.percentage - b.percentage);
-  
-  function compare( a, b ) {
-  if ( a.points < b.points ){
-    return -1;
-  }
-  if ( a.points > b.points ){
-    return 1;
-  }
-  return 0;
+	newArray.push(teamArray);
+	
+	const finalArray = [].concat(...newArray);
+	
+	finalArray.sort((a,b) => {
+		return a.percentage - b.percentage;
+	})
+	
+	
+	console.log(finalArray.percentage);
+
+}
+	
+	
 }
 
-console.log(newArray);
-
-console.log(teamArray.sort(compare));
-}
+let instance = new Start();

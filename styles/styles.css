@@ -57,6 +57,12 @@ h2 {
   border-radius: 15px;
 }
 
+
+.teamList {
+	max-width: 775px;
+    margin: auto;
+}
+
 .teamList div {
   position: relative;
   width: 80%;
@@ -64,10 +70,10 @@ h2 {
   margin-top: 15px;
   min-height: 100px;
   border: thin solid #333;
-  border-radius: 3px;
   -webkit-border-radius: 3px;
   -o-border-radius: 3px;
   -moz-border-radius: 3px;
+  border-radius: 3px;
 }
 
 .teamList p {
