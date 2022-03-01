@@ -7,25 +7,17 @@ class Start {
 	constructor() {
 		this.start();
 	}
-
-start (){
-fetch('https://statsapi.web.nhl.com/api/v1/teams')
-  .then(response => response.json())
-  .then((data) => {
-      let team = data.teams;
-      
-      team.map((i) => {
-        this.createTeamArray(i.abbreviation, i.id, i.division.nameShort, i.conference.name);
-        let div = i.abbreviation;
-        this.createDivElement(div, i.name);
-        let h2tag = 'h2' + i.abbreviation;
-       	this.createH2Element(h2tag, i.name, i.abbreviation);
-      })
-  }).then(() => {
-      //Do something 
-  }).catch(() => {
-    alert("There has been an error, please try again.");
-  })
+	
+	start() {
+		fetch('https://statsapi.web.nhl.com/api/v1/teams')
+   .then(response => response.json())
+   .then((data) => {
+       let team = data.teams;
+       
+       team.map((i) => {
+		   console.log(i);
+	   })
+	})
 }
 
 // id is id value assigned to h2
@@ -75,7 +67,7 @@ createImgElement(team) {
   divWrap.append(img);
 }
 	
-async createTeamArray(team, id, division, conference) {
+reateTeamArray(team, id, division, conference) {
 	let teamArray = [];
   fetch('https://statsapi.web.nhl.com/api/v1/teams/'+ id +'/stats/')
     .then(response => response.json())
@@ -89,30 +81,47 @@ async createTeamArray(team, id, division, conference) {
       'losses': data.stats[0].splits[0].stat.losses,
       'ot': data.stats[0].splits[0].stat.ot,
       'games': data.stats[0].splits[0].stat.gamesPlayed,
-      'percentage': parseInt(data.stats[0].splits[0].stat.ptPctg)
+      'percentage': parseInt(data.stats[0].splits[0].stat.ptPctg),
 	})
   })
-.then((e) => {
-this.getStandingsArray(teamArray);
-})     
+	.then((e) => {
+		  this.getStandingsArray(teamArray, id);
+	  })     
 }
 
-getStandingsArray(teamArray){
+getStandingsArray(teamArray, id){
+	console.log(id);
 	//Create standings for each division, conference and overall
 	newArray.push(teamArray);
 	
-	const finalArray = [].concat(...newArray);
+	let finalArray = [].concat(...newArray);
 	
-	finalArray.sort((a,b) => {
+	finalArray = finalArray.sort((a,b) => {
 		return a.percentage - b.percentage;
 	})
 	
+	if(finalArray.length === 32) {
+		
+	finalArray.map((e) => {
+		this.createElements(e);
+	})
+	}
+	}
 	
-	console.log(finalArray.percentage);
+	createElements(element) {
+		this.createDivElement("div", element.name);
+        let h2tag = 'h2' + element.name;
+       	this.createH2Element(h2tag, element.name, element.name);
+		console.log(element);
+		this.createImgElement(element.team);
+        this.createPElement("Points", "points_" + element.teamID, element.points, element.team);
+        this.createPElement("Wins", "wins_" + element.teamID, element.wins, element.team);
+        this.createPElement("Losses", "loss_" + element.teamID, element.losses, element.team);
+        this.createPElement("OT Losses", "ot_" + element.teamID, element.ot, element.team);
+        this.createPElement("Games Played", "gp_" + element.teamID, element.games, element.team);
+        this.createPElement("Point Percentage", "pct_" + element.teamID, element.percentage, element.team);
+	}
 
-}
-	
-	
 }
 
 let instance = new Start();
